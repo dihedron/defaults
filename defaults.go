@@ -228,10 +228,9 @@ func parseByMethod(field reflect.Value, defaultVal string) bool {
 			duration, err := time.ParseDuration(defaultVal)
 			if err == nil {
 				field.Set(reflect.ValueOf(duration))
-				return false
+				return true
 			}
 		}
-		return true
 	}
 	return false
 }
