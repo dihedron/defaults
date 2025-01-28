@@ -6,6 +6,7 @@ import (
 	"errors"
 	"reflect"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -63,6 +64,9 @@ func setField(field reflect.Value, defaultVal string) error {
 	isInitial := isInitialValue(field)
 	if isInitial {
 		if unmarshalByInterface(field, defaultVal) {
+			return nil
+		}
+		if parseByMethod(field, defaultVal) {
 			return nil
 		}
 
@@ -213,6 +217,21 @@ func unmarshalByInterface(field reflect.Value, defaultVal string) bool {
 		if err := asJSON.UnmarshalJSON([]byte(defaultVal)); err == nil {
 			return true
 		}
+	}
+	return false
+}
+
+func parseByMethod(field reflect.Value, defaultVal string) bool {
+	if field.Type() == reflect.TypeOf(time.Duration(0)) {
+		if defaultVal != "" {
+			defaultVal = strings.TrimSpace(defaultVal)
+			duration, err := time.ParseDuration(defaultVal)
+			if err == nil {
+				field.Set(reflect.ValueOf(duration))
+				return false
+			}
+		}
+		return true
 	}
 	return false
 }
