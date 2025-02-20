@@ -24,7 +24,7 @@ Initialize structs with default values
 - Recursively initializes fields in a struct
 - Dynamically sets default values by:
   - Implementing the [`defaults.Setter`](./setter.go) interface, or
-  - Implementing [`encoding.TextUnmarshaller`](https://pkg.go.dev/encoding#TextUnmarshaler)
+  - Implementing [`encoding.TextUnmarshaller`](https://pkg.go.dev/encoding#TextUnmarshaler) (has precedence over `defaults.Setter`)
 - Preserves non-initial values from being reset with a default value
 
 
