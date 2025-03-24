@@ -34,7 +34,7 @@ func Set(ptr interface{}) error {
 
 	for i := 0; i < t.NumField(); i++ {
 		if defaultVal := t.Field(i).Tag.Get(fieldName); defaultVal != "-" {
-			if t.Field(i).IsExported() && v.Field(i).IsZero() {
+			if t.Field(i).PkgPath == "" && v.Field(i).IsZero() {
 				iface := v.Field(i).Addr().Interface()
 
 				if tu, ok := iface.(encoding.TextUnmarshaler); ok {
