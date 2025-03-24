@@ -6,6 +6,7 @@ import (
 	"net"
 	"reflect"
 	"strconv"
+	"strings"
 	"testing"
 	"time"
 
@@ -766,6 +767,21 @@ func TestTextUnmarshaler(t *testing.T) {
 
 		if timeout.Timeout.Duration != 200*time.Millisecond {
 			t.Errorf("Set overwrote existing value to (%s)", timeout.Timeout.Duration)
+		}
+	})
+
+	t.Run("reports error when unmarshaling fails", func(t *testing.T) {
+		timeout := &struct {
+			Timeout Duration `default:"garbage"`
+		}{}
+
+		err := Set(timeout)
+		if err == nil {
+			t.Error("Set should return error")
+		}
+
+		if !strings.Contains(err.Error(), "invalid duration") {
+			t.Errorf("Set should return error with invalid duration")
 		}
 	})
 }
