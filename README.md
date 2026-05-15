@@ -1,3 +1,5 @@
+### [!!! Looking for a new maintainer !!!](https://github.com/creasty/defaults/issues/61)
+
 defaults
 ========
 
