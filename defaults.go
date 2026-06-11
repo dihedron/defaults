@@ -21,7 +21,7 @@ const (
 // Set initializes members in a struct referenced by a pointer.
 // Maps and slices are initialized by `make` and other primitive types are set with default values.
 // `ptr` should be a struct pointer
-func Set(ptr interface{}) error {
+func Set(ptr any) error {
 	if reflect.TypeOf(ptr).Kind() != reflect.Ptr {
 		return errInvalidType
 	}
@@ -58,7 +58,7 @@ func Set(ptr interface{}) error {
 
 // MustSet function is a wrapper of Set function
 // It will call Set and panic if err not equals nil.
-func MustSet(ptr interface{}) {
+func MustSet(ptr any) {
 	if err := Set(ptr); err != nil {
 		panic(err)
 	}
@@ -269,6 +269,6 @@ func shouldInitializeField(field reflect.Value, tag string) bool {
 }
 
 // CanUpdate returns true when the given value is an initial value of its type
-func CanUpdate(v interface{}) bool {
+func CanUpdate(v any) bool {
 	return isInitialValue(reflect.ValueOf(v))
 }

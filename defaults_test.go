@@ -703,7 +703,7 @@ func TestCanUpdate(t *testing.T) {
 
 	var myStructPtr *st
 
-	pairs := map[interface{}]bool{
+	pairs := map[any]bool{
 		0:            true,
 		123:          false,
 		float64(0):   true,
