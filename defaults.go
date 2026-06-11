@@ -22,7 +22,7 @@ const (
 // Maps and slices are initialized by `make` and other primitive types are set with default values.
 // `ptr` should be a struct pointer
 func Set(ptr any) error {
-	if reflect.TypeOf(ptr).Kind() != reflect.Ptr {
+	if reflect.TypeOf(ptr).Kind() != reflect.Pointer {
 		return errInvalidType
 	}
 
@@ -168,13 +168,13 @@ func setField(field reflect.Value, defaultVal string) error {
 					return err
 				}
 			}
-		case reflect.Ptr:
+		case reflect.Pointer:
 			field.Set(reflect.New(field.Type().Elem()))
 		}
 	}
 
 	switch field.Kind() {
-	case reflect.Ptr:
+	case reflect.Pointer:
 		if isInitial || field.Elem().Kind() == reflect.Struct {
 			setField(field.Elem(), defaultVal)
 			callSetter(field.Interface())
