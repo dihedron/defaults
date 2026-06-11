@@ -6,6 +6,7 @@ import (
 	"net"
 	"reflect"
 	"strconv"
+	"strings"
 	"testing"
 	"time"
 
@@ -719,6 +720,80 @@ func TestCanUpdate(t *testing.T) {
 			t.Errorf("CanUpdate(%v) returns %v, expected %v", input, output, expect)
 		}
 	}
+}
+
+func TestTextUnmarshaler(t *testing.T) {
+	t.Run("value type", func(t *testing.T) {
+		timeout := &struct {
+			Timeout Duration `default:"10s"`
+		}{}
+
+		err := Set(timeout)
+		if err != nil {
+			t.Error("set failed")
+		}
+
+		if timeout.Timeout.Duration != 10*time.Second {
+			t.Errorf("it should initialize Duration with tag")
+		}
+	})
+
+	t.Run("nil pointer type", func(t *testing.T) {
+		timeout := &struct {
+			Timeout *Duration `default:"10s"`
+		}{}
+
+		err := Set(timeout)
+		if err != nil {
+			t.Error("set failed")
+		}
+
+		if timeout.Timeout.Duration != 10*time.Second {
+			t.Errorf("it should initialize Duration with tag")
+		}
+	})
+
+	t.Run("does not overwrite existing value", func(t *testing.T) {
+		timeout := &struct {
+			Timeout Duration `default:"10s"`
+		}{
+			Timeout: Duration{Duration: 200 * time.Millisecond},
+		}
+
+		err := Set(timeout)
+		if err != nil {
+			t.Error("set failed")
+		}
+
+		if timeout.Timeout.Duration != 200*time.Millisecond {
+			t.Errorf("Set overwrote existing value to (%s)", timeout.Timeout.Duration)
+		}
+	})
+
+	t.Run("reports error when unmarshaling fails", func(t *testing.T) {
+		timeout := &struct {
+			Timeout Duration `default:"garbage"`
+		}{}
+
+		err := Set(timeout)
+		if err == nil {
+			t.Error("Set should return error")
+		}
+
+		if !strings.Contains(err.Error(), "invalid duration") {
+			t.Errorf("Set should return error with invalid duration")
+		}
+	})
+}
+
+type Duration struct {
+	time.Duration
+}
+
+func (d *Duration) UnmarshalText(text []byte) error {
+	var err error
+	d.Duration, err = time.ParseDuration(string(text))
+	return err
 }
 
 type Child struct {
