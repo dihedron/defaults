@@ -36,3 +36,38 @@ jobs:
         run: make
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # - name: Run Go tests
+      #   run: go test -coverprofile=coverage.txt
+
+      # - name: Upload results to Codecov
+      #   uses: codecov/codecov-action@v5
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Run Go Tests
+        run: go test -v -coverprofile=coverage.out ./...
+
+      - name: Convert Coverage to Cobertura XML format
+        run: |
+          go install github.com/axw/gocov/gocov@latest
+          go install github.com/AlekSi/gocov-xml@latest
+          gocov convert coverage.out | gocov-xml > coverage.cobertura.xml
+
+      - name: Code Coverage Summary Report
+        uses: irongut/CodeCoverageSummary@v1.3.0
+        with:
+          filename: coverage.cobertura.xml
+          badge: true
+          fail_below_min: false
+          format: markdown
+          output: both
+          thresholds: '60 80'
+
+      - name: Add Coverage Summary to Action Run
+        run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload results to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
