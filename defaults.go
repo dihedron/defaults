@@ -194,7 +194,7 @@ func setField(field reflect.Value, defaultVal string) error {
 			var v = field.MapIndex(e)
 
 			switch v.Kind() {
-			case reflect.Ptr:
+			case reflect.Pointer:
 				switch v.Elem().Kind() {
 				case reflect.Struct, reflect.Slice, reflect.Map:
 					if err := setField(v.Elem(), ""); err != nil {
@@ -255,7 +255,7 @@ func shouldInitializeField(field reflect.Value, tag string) bool {
 	switch field.Kind() {
 	case reflect.Struct:
 		return true
-	case reflect.Ptr:
+	case reflect.Pointer:
 		if !field.IsNil() && field.Elem().Kind() == reflect.Struct {
 			return true
 		}
