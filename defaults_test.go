@@ -313,6 +313,9 @@ func TestInit(t *testing.T) {
 		if sample.String != "hello" {
 			t.Errorf("it should initialize string")
 		}
+		if sample.Duration != 10000000000 {
+			t.Errorf("it should initialize time.Duration")
+		}
 
 		if sample.IntOct != 0o1 {
 			t.Errorf("it should initialize int with octal literal")
