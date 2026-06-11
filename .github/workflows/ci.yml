@@ -33,7 +33,11 @@ jobs:
           install-only: true
 
       - name: Run Makefile target
-        run: make
+        run: |
+          go install github.com/axw/gocov/gocov@latest
+          curl -sSfL https://golangci-lint.run/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.12.2
+          golangci-lint --version
+          make
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
