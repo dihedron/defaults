@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 
-	"github.com/creasty/defaults"
+	"github.com/dihedron/defaults"
 )
 
 type Gender string

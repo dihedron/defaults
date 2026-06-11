@@ -5,7 +5,7 @@ type Setter interface {
 	SetDefaults()
 }
 
-func callSetter(v interface{}) {
+func callSetter(v any) {
 	if ds, ok := v.(Setter); ok {
 		ds.SetDefaults()
 	}

@@ -1,4 +1,4 @@
-module github.com/creasty/defaults
+module github.com/dihedron/defaults
 
 go 1.26
 

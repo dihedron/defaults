@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/creasty/defaults/internal/fixture"
+	"github.com/dihedron/defaults/internal/fixture"
 )
 
 type (
