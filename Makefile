@@ -27,3 +27,5 @@ ci-test: lint
 			rm profile.out; \
 		fi; \
 	done
+
+include release.mk
